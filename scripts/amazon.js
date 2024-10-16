@@ -1,6 +1,7 @@
-import {cart} from '../data/cart.js'; //module used to avoid naming conflicts
+import { cart } from '../data/cart.js'; //module used to avoid naming conflicts
 // import {cart as myCart} from '../data/cart.js';
 // const cart = [];
+import { products } from '../data/products.js';
 let productsHtml = '';
 
 products.forEach((product) => {

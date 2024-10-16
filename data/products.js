@@ -656,5 +656,36 @@ const products = [
       "apparel",
       "mens"
     ]
+  },
+  {
+    id: "bc2847e9-5323-403f-b7cf-57fdf134a986",
+    image: "images/products/umbrella.jpg",
+    name: "Monsoon Umbrella",
+    rating: {
+      stars: 4,
+      count: 120
+    },
+    priceCents: 1999,
+    keywords: [
+      "umbrella",
+      "monsoon",
+      "raincoat"
+    ]
+  },
+  {
+    id: "bc2847e9-5323-519f-45ed-57fdf456a986",
+    image: "images/products/backpack.jpg",
+    name: "Office Backpack",
+    rating: {
+      stars: 4,
+      count: 210
+    },
+    priceCents: 2999,
+    keywords: [
+      "backpack",
+      "laptopbag",
+      "laptop",
+      "schoolbag"
+    ]
   }
 ];

@@ -119,6 +119,25 @@
   margin-left: 3px;
 }
 
+.product-quantity .quantity-input {
+  width: 35px;
+  display: none;
+}
+
+.product-quantity .save-quantity-link {
+  display: none;
+}
+
+.is-updating .quantity-label,
+.is-updating .update-quantity-link {
+  display: none;
+}
+
+.is-updating .quantity-input,
+.is-updating .save-quantity-link{
+  display: initial;
+}
+
 @media (max-width: 1000px) {
   .delivery-options {
     /* grid-column: 1 means this element will be placed

@@ -135,17 +135,27 @@ document.querySelectorAll('.js-update-link')
 
 document.querySelectorAll('.js-save-link')
   .forEach((link) => {
-    link.addEventListener('click', () => {
-      const {productId} = link.dataset;
+    const {productId} = link.dataset;
+    const saveEvent = () => {
       const cartItemContainer = document.querySelector(`.js-cart-item-container-${productId}`);
       cartItemContainer.classList.remove('is-updating');
 
       const quantityInputElement = document.querySelector(`.js-quantity-input-${productId}`);
       const newQuantity = Number(quantityInputElement.value);
+      if (newQuantity >= 0 && newQuantity < 1000) {
+        updateItemQuantity(productId, newQuantity);
+        document.querySelector(`.js-quantity-label-${productId}`).innerText = newQuantity;
+        updateCartQuantity();
+      }
+      else 
+        alert('Add quantity between 0 and 1000');
+    };
 
-      updateItemQuantity(productId, newQuantity);
+    link.addEventListener('click', saveEvent);
 
-      document.querySelector(`.js-quantity-label-${productId}`).innerText = newQuantity;
-      updateCartQuantity();
+    const quantityInputElement = document.querySelector(`.js-quantity-input-${productId}`);
+    quantityInputElement.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter')
+        saveEvent();
     });
   });

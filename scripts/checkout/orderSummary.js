@@ -4,10 +4,15 @@ import { formatCurrency } from "../utils/money.js";
 import dayjs from "https://unpkg.com/dayjs@1.11.10/esm/index.js";
 import {deliveryOptions, getDeliveryOption} from "../../data/deliveryOptions.js";
 import { renderPaymentSummary } from "./paymentSummary.js";
+import { renderCheckoutHeader } from "./checkoutHeader.js";
 
 export function renderOrderSummary() {
-  updateCartQuantity(); 
+  const today = dayjs();
+  const date = today.add(1, 'days');
+  console.log(date.format('dddd'));
   
+  renderCheckoutHeader();
+
   let cartSummaryHtml = ''; 
   // if (cart.length === 0)
   //   document.querySelector('.js-order-summary').innerText = 'The cart is empty';
@@ -109,24 +114,14 @@ export function renderOrderSummary() {
   
   document.querySelector('.js-order-summary').innerHTML = cartSummaryHtml;
   
-  function updateCartQuantity() {
-    let cartQuantity = calculateCartQuantity();
-    if (cartQuantity === 0)
-      document.querySelector('.js-checkout-items-link').innerText = '';
-    else {
-      document.querySelector('.js-checkout-items-link').innerText = cartQuantity;
-    }
-  }
-  
   document.querySelectorAll('.js-delete-link')
     .forEach((link) => {
       link.addEventListener('click', () => {
         const productId = link.dataset.productId;
         removeFromCart(productId);
-        updateCartQuantity();
-        const container = document.querySelector(`.js-cart-item-container-${productId}`);
-        container.remove();
         renderPaymentSummary();
+        renderOrderSummary();
+        renderCheckoutHeader();
       });
     });
   
@@ -151,8 +146,8 @@ export function renderOrderSummary() {
         if (newQuantity >= 0 && newQuantity < 1000) {
           updateItemQuantity(productId, newQuantity);
           document.querySelector(`.js-quantity-label-${productId}`).innerText = newQuantity;
-          updateCartQuantity();
           renderPaymentSummary();
+          renderCheckoutHeader();
         }
         else 
           alert('Add quantity between 0 and 1000');

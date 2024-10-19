@@ -2,14 +2,11 @@ import {cart, removeFromCart, calculateCartQuantity, updateItemQuantity, updateD
 import { products, getProduct } from "../../data/products.js";
 import { formatCurrency } from "../utils/money.js";
 import dayjs from "https://unpkg.com/dayjs@1.11.10/esm/index.js";
-import {deliveryOptions, getDeliveryOption} from "../../data/deliveryOptions.js";
+import {calculateDeliveryDate, deliveryOptions, getDeliveryOption} from "../../data/deliveryOptions.js";
 import { renderPaymentSummary } from "./paymentSummary.js";
 import { renderCheckoutHeader } from "./checkoutHeader.js";
 
 export function renderOrderSummary() {
-  const today = dayjs();
-  const date = today.add(1, 'days');
-  console.log(date.format('dddd'));
   
   renderCheckoutHeader();
 
@@ -22,10 +19,8 @@ export function renderOrderSummary() {
 
     const {deliveryOptionId} = cartItem;
     const deliveryOption = getDeliveryOption(deliveryOptionId);
-  
-    const today = dayjs();
-    const deliveryDate = today.add(deliveryOption.deliveryDays, 'days');
-    const dateString = deliveryDate.format('dddd, MMMM D');
+
+    const dateString = calculateDeliveryDate(); //func returning string
   
     cartSummaryHtml += 
     `
@@ -77,11 +72,7 @@ export function renderOrderSummary() {
   function deliveryOptionsHTML(matchingProduct, cartItem) {
     let html = '';
     deliveryOptions.forEach((deliveryOption) => {
-      const today = dayjs();
-      const deliveryDate = today.add(
-        deliveryOption.deliveryDays, 'days'
-      );
-      const dateString = deliveryDate.format('dddd, MMMM D');
+      const dateString = calculateDeliveryDate(); //func returning string
   
       const priceString = deliveryOption.priceCents === 0 
         ? 'FREE'
@@ -131,6 +122,13 @@ export function renderOrderSummary() {
         const {productId} = link.dataset;
         const cartItemContainer = document.querySelector(`.js-cart-item-container-${productId}`);
         cartItemContainer.classList.add('is-updating');
+
+        const quantityInputElement = document.querySelector(`.js-quantity-input-${productId}`);
+        const quantityLabel = document.querySelector(`.js-quantity-label-${productId}`);
+
+        quantityInputElement.value = quantityLabel.innerText; // Set the default value based on current quantity
+        // Focus the input field after setting the value
+        quantityInputElement.focus();
       });
     });
   
@@ -145,7 +143,7 @@ export function renderOrderSummary() {
         const newQuantity = Number(quantityInputElement.value);
         if (newQuantity >= 0 && newQuantity < 1000) {
           updateItemQuantity(productId, newQuantity);
-          document.querySelector(`.js-quantity-label-${productId}`).innerText = newQuantity;
+          renderOrderSummary();
           renderPaymentSummary();
           renderCheckoutHeader();
         }
